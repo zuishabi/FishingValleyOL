@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://cjopj8q2hj8cp"]
+
+[ext_resource type="Script" uid="uid://cl8isdh5pq5yw" path="res://senes/main/main.gd" id="1_blys0"]
+[ext_resource type="PackedScene" uid="uid://bdetk0tiwkyn7" path="res://senes/compoents/self.tscn" id="1_ux6c2"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_blys0")
+
+[node name="Self" parent="." instance=ExtResource("1_ux6c2")]

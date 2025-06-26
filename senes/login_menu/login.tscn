@@ -1,0 +1,143 @@
+[gd_scene load_steps=10 format=3 uid="uid://cqwox2lsxvc7x"]
+
+[ext_resource type="Script" uid="uid://bpceh0wnq04iw" path="res://senes/login_menu/login.gd" id="1_12802"]
+[ext_resource type="Script" uid="uid://b4c6eucgdyjuf" path="res://senes/start_menu/error.gd" id="2_12802"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_12802"]
+font_size = 26
+outline_size = 2
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_wlox8"]
+font_size = 20
+outline_size = 2
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_baw6w"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5p4f7"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mjxu3"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_i4s18"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_o0cqe"]
+
+[node name="Login" type="CanvasLayer"]
+script = ExtResource("1_12802")
+
+[node name="LoginPanel" type="PanelContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -181.0
+offset_top = -209.0
+offset_right = 181.0
+offset_bottom = 209.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LoginPanel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="LoginPanel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+text = "登录"
+label_settings = SubResource("LabelSettings_12802")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Email" type="HBoxContainer" parent="LoginPanel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="LoginPanel/VBoxContainer/Email"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "邮箱"
+label_settings = SubResource("LabelSettings_wlox8")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LineEdit" type="LineEdit" parent="LoginPanel/VBoxContainer/Email"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Password" type="HBoxContainer" parent="LoginPanel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="LoginPanel/VBoxContainer/Password"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "密码"
+label_settings = SubResource("LabelSettings_wlox8")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LineEdit" type="LineEdit" parent="LoginPanel/VBoxContainer/Password"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Login" type="Button" parent="LoginPanel/VBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 10
+theme_override_styles/focus = SubResource("StyleBoxEmpty_baw6w")
+text = "登录"
+
+[node name="Rigster" type="HBoxContainer" parent="LoginPanel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_vertical = 8
+alignment = 1
+
+[node name="Label" type="Label" parent="LoginPanel/VBoxContainer/Rigster"]
+layout_mode = 2
+text = "没有账号？"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RigisterButton" type="Button" parent="LoginPanel/VBoxContainer/Rigster"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.211657, 0.506688, 0.759335, 1)
+theme_override_styles/focus = SubResource("StyleBoxEmpty_5p4f7")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_mjxu3")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_i4s18")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_o0cqe")
+text = "点我注册"
+
+[node name="Error" type="Window" parent="."]
+auto_translate_mode = 1
+title = "错误"
+initial_position = 2
+size = Vector2i(400, 250)
+visible = false
+transient = true
+exclusive = true
+unresizable = true
+script = ExtResource("2_12802")
+
+[node name="Label" type="Label" parent="Error"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LoginRequest" type="HTTPRequest" parent="."]
+timeout = 5.0
+
+[connection signal="pressed" from="LoginPanel/VBoxContainer/Login" to="." method="_on_login_pressed"]
+[connection signal="pressed" from="LoginPanel/VBoxContainer/Rigster/RigisterButton" to="." method="_on_rigister_button_pressed"]
+[connection signal="close_requested" from="Error" to="Error" method="_on_close_requested"]
+[connection signal="request_completed" from="LoginRequest" to="." method="_on_login_request_request_completed"]
