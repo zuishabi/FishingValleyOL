@@ -10,6 +10,7 @@ var generator:AudioStreamPlayer
 var tcp_conn:StreamPeerTCP = StreamPeerTCP.new()
 #判断是否登录
 var login:bool = false
+
 @onready var event_bus:EventBus = get_node("/root/EventBus")
 
 class Message:
@@ -24,14 +25,19 @@ func _ready():
 	put_processor = Thread.new()
 
 func connect_to_server(ip:String,port:int,key):
+	print(ip," ",port)
 	if tcp_conn.connect_to_host(ip,port) != OK:
+		confirm_login.emit(false,0,"连接服务器失败,1")
 		return
 	tcp_conn.poll()
-	if tcp_conn.get_status() == StreamPeerTCP.Status.STATUS_CONNECTED:
-		pass
-	else:
+	for i in 5:
+		if tcp_conn.get_status() == StreamPeerTCP.Status.STATUS_CONNECTED:
+			break
+		tcp_conn.poll()
+		await get_tree().create_timer(0.5).timeout
+	if tcp_conn.get_status() != StreamPeerTCP.Status.STATUS_CONNECTED:
 		tcp_conn.disconnect_from_host()
-		confirm_login.emit(false,0,"连接服务器失败")
+		confirm_login.emit(false,0,"连接服务器失败,2")
 		return
 	get_processor.start(get_msg)
 	put_processor.start(_send_msg)
@@ -88,3 +94,7 @@ func parse_msg(msg_id:int,msg:PackedByteArray):
 		var move:Proto.protocol.Movement = Proto.protocol.Movement.new()
 		move.from_bytes(msg)
 		event_bus.plyer_move.emit.call_deferred(move)
+	elif msg_id == 4:
+		var rsp:Proto.protocol.PlayerNameRsp = Proto.protocol.PlayerNameRsp.new()
+		rsp.from_bytes(msg)
+		event_bus.get_player_name.emit.call_deferred(rsp)

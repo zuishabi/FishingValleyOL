@@ -8,12 +8,22 @@ const CHUNK_SIZE = 1024
 var files_info:Dictionary[String,PackedStringArray]
 var check_thread:Thread = Thread.new()
 var pck_path:String
+var server_config:ConfigFile = ConfigFile.new()
+var address:String
 
 signal start_check
 signal check_complete
 
 func _ready():
-	print("start")
+	if !FileAccess.file_exists("res://server_conf.cfg"):
+		FileAccess.open("res://server_conf.cfg",7)
+		server_config.load("res://server_conf.cfg")
+		server_config.set_value("HotUpdateServer","address","hotupdate.zuishabi.top")
+		server_config.set_value("LoginCenter","address","gateway.zuishabi.top")
+		server_config.save("res://server_conf.cfg")
+		return
+	server_config.load("res://server_conf.cfg")
+	address = server_config.get_value("HotUpdateServer","address")
 	if OS.has_feature("editor"):
 		get_tree().change_scene_to_file.call_deferred("res://senes/login_menu/login.tscn")
 	else:
@@ -24,7 +34,7 @@ func _ready():
 		check_complete.connect(check2)
 		loading.load_complete.connect(load_complete)
 		loading.change_status("获取资源列表中...",20,0.5)
-		check_files.request("http://127.0.0.1:8889/checkFiles",[],HTTPClient.METHOD_GET)
+		check_files.request("http://" + address + "/checkFiles",[],HTTPClient.METHOD_GET)
 
 func check1():
 	var exe_path = OS.get_executable_path()
@@ -63,7 +73,7 @@ func check2(required_files:PackedStringArray):
 	for i:String in required_files:
 		FileAccess.open(pck_path + i,7)
 		download_file.download_file =pck_path + i
-		download_file.request("http://127.0.0.1:8889/downloadFile?name="+i)
+		download_file.request("http://" + address + "/downloadFile?name="+i)
 		await download_file.request_completed
 	loading.change_status("加载资源中",99,2)
 	load_resource()

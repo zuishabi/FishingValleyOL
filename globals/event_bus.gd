@@ -6,3 +6,6 @@ signal show_error
 
 # 有玩家移动
 signal plyer_move(move:Proto.protocol.Movement)
+
+# 获取到玩家的名称
+signal get_player_name(rsp:Proto.protocol.PlayerNameRsp)
