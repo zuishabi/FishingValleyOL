@@ -4,6 +4,7 @@ extends CharacterBody2D
 @onready var name_text = $Name
 @onready var animation_tree = $AnimationTree
 @onready var idle_timer = $IdleTimer
+@onready var sprite_2d = $Sprite2D
 
 const DIRECTION_THRESHOLD := 0.3
 const DISTANCE_THRESHOLD := 0.1
@@ -39,10 +40,9 @@ func _physics_process(delta: float):
 		is_moving = true
 		idle_timer.start()
 	if interpolation_factor < 1.0:
-		interpolation_factor += move_speed  # 固定步长，非 delta 依赖
+		interpolation_factor += move_speed
 		global_position = last_position.lerp(server_target_position, interpolation_factor)
-	else:
-		global_position = server_target_position  # 确保最终对齐
 
 func _on_idle_timer_timeout():
 	is_moving = false
+	global_position = server_target_position

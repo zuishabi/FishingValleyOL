@@ -70,6 +70,7 @@ func _send_msg():
 func get_msg():
 	while 1:
 		if tcp_conn.get_status() != StreamPeerTCP.Status.STATUS_CONNECTED:
+			print("断开连接")
 			if login:
 				event_bus.show_error.emit.call_deferred("与服务器断开连接",1,back_to_login_menu)
 			return
@@ -94,7 +95,15 @@ func parse_msg(msg_id:int,msg:PackedByteArray):
 		var move:Proto.protocol.Movement = Proto.protocol.Movement.new()
 		move.from_bytes(msg)
 		event_bus.plyer_move.emit.call_deferred(move)
-	elif msg_id == 4:
+	elif msg_id == 10:
 		var rsp:Proto.protocol.PlayerNameRsp = Proto.protocol.PlayerNameRsp.new()
 		rsp.from_bytes(msg)
 		event_bus.get_player_name.emit.call_deferred(rsp)
+	elif msg_id == 4:
+		# 用户离开游戏
+		pass
+	elif msg_id == 6:
+		# 服务器传送玩家
+		var transmit:Proto.protocol.TransmitPlayer = Proto.protocol.TransmitPlayer.new()
+		transmit.from_bytes(msg)
+		event_bus.transmit_player.emit.call_deferred(transmit)

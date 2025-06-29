@@ -21,7 +21,6 @@ func _ready():
 		server_config.set_value("HotUpdateServer","address","hotupdate.zuishabi.top")
 		server_config.set_value("LoginCenter","address","gateway.zuishabi.top")
 		server_config.save("res://server_conf.cfg")
-		return
 	server_config.load("res://server_conf.cfg")
 	address = server_config.get_value("HotUpdateServer","address")
 	if OS.has_feature("editor"):
