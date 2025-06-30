@@ -687,4 +687,7 @@ libraries = {
 &"": SubResource("AnimationLibrary_khs7q")
 }
 
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(3.5, 3.5)
+
 [connection signal="timeout" from="SyncTimer" to="." method="_on_sync_timer_timeout"]

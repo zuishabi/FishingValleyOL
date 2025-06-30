@@ -101,7 +101,9 @@ func parse_msg(msg_id:int,msg:PackedByteArray):
 		event_bus.get_player_name.emit.call_deferred(rsp)
 	elif msg_id == 4:
 		# 用户离开游戏
-		pass
+		var leave:Proto.protocol.PlayerLeave = Proto.protocol.PlayerLeave.new()
+		leave.from_bytes(msg)
+		event_bus.player_leave.emit.call_deferred(leave)
 	elif msg_id == 6:
 		# 服务器传送玩家
 		var transmit:Proto.protocol.TransmitPlayer = Proto.protocol.TransmitPlayer.new()

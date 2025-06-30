@@ -13,6 +13,7 @@ func _ready():
 	event_bus.plyer_move.connect(_on_player_move)
 	event_bus.get_player_name.connect(_on_get_player_name)
 	event_bus.transmit_player.connect(_on_transmit_player)
+	event_bus.player_leave.connect(_on_player_leave)
 	var ready:Proto.protocol.UserReady = Proto.protocol.UserReady.new()
 	client.send_msg(2,ready.to_bytes())
 
@@ -33,5 +34,8 @@ func _on_get_player_name(rsp:Proto.protocol.PlayerNameRsp):
 	user_map[rsp.get_uid()].update(rsp.get_name())
 
 func _on_transmit_player(target:Proto.protocol.TransmitPlayer):
-	print("移动玩家",target.get_x(),",",target.get_y())
 	self_player.global_position = Vector2(float(target.get_x()) / 10.0,float(target.get_y()) / 10.0)
+
+func _on_player_leave(leave:Proto.protocol.PlayerLeave):
+	user_map[leave.get_uid()].queue_free()
+	user_map.erase(leave.get_uid())

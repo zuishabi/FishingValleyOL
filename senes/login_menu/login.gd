@@ -20,7 +20,7 @@ func _on_login_pressed():
 		error.update("请填写完整信息")
 		return
 	var body:String = JSON.new().stringify({"email"=email.text,"pwd"=password.text,"service"="FishingValley"})
-	login_request.request("http://127.0.0.1:8888/login",[],HTTPClient.METHOD_POST,body)
+	login_request.request("http://gateway.zuishabi.top/login",[],HTTPClient.METHOD_POST,body)
 
 func _on_login_request_request_completed(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 	var json = JSON.new()

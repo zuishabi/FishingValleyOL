@@ -643,7 +643,7 @@ texture = ExtResource("2_youcb")
 flip_h = true
 hframes = 6
 vframes = 3
-frame = 15
+frame = 12
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_frdue")

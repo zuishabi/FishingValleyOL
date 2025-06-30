@@ -12,3 +12,6 @@ signal get_player_name(rsp:Proto.protocol.PlayerNameRsp)
 
 # 服务器传送玩家
 signal transmit_player(target:Proto.protocol.TransmitPlayer)
+
+# 玩家退出
+signal player_leave(leave:Proto.protocol.PlayerLeave)
