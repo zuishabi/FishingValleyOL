@@ -6,11 +6,16 @@ extends CanvasLayer
 @onready var error = $Error
 var client:Client = preload("res://client/client.tscn").instantiate()
 var event_bus:EventBus = preload("res://globals/event_bus.tscn").instantiate()
+var ui:UI = preload("res://ui/ui.tscn").instantiate()
+var server_config:ConfigFile = ConfigFile.new()
 
 func _ready():
 	get_tree().root.add_child(event_bus)
 	get_tree().root.add_child(client)
+	get_tree().root.add_child(ui)
+	ui.hide()
 	client.confirm_login.connect(login_success)
+	server_config.load("res://server_conf.cfg")
 
 func _on_rigister_button_pressed():
 	OS.shell_open("http://www.zuishabi.top/register")
@@ -20,7 +25,7 @@ func _on_login_pressed():
 		error.update("请填写完整信息")
 		return
 	var body:String = JSON.new().stringify({"email"=email.text,"pwd"=password.text,"service"="FishingValley"})
-	login_request.request("http://gateway.zuishabi.top/login",[],HTTPClient.METHOD_POST,body)
+	login_request.request("http://"+server_config.get_value("LoginCenter","address")+"/login",[],HTTPClient.METHOD_POST,body)
 
 func _on_login_request_request_completed(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 	var json = JSON.new()

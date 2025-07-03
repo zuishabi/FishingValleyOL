@@ -858,6 +858,11 @@ class Movement:
 		service.field = __y
 		data[__y.tag] = service
 		
+		__direction = PBField.new("direction", PB_DATA_TYPE.BOOL, PB_RULE.OPTIONAL, 4, true, DEFAULT_VALUES_3[PB_DATA_TYPE.BOOL])
+		service = PBServiceField.new()
+		service.field = __direction
+		data[__direction.tag] = service
+		
 	var data = {}
 	
 	var __uid: PBField
@@ -898,6 +903,19 @@ class Movement:
 		__y.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
 	func set_y(value : int) -> void:
 		__y.value = value
+	
+	var __direction: PBField
+	func has_direction() -> bool:
+		if __direction.value != null:
+			return true
+		return false
+	func get_direction() -> bool:
+		return __direction.value
+	func clear_direction() -> void:
+		data[4].state = PB_SERVICE_STATE.UNFILLED
+		__direction.value = DEFAULT_VALUES_3[PB_DATA_TYPE.BOOL]
+	func set_direction(value : bool) -> void:
+		__direction.value = value
 	
 	func _to_string() -> String:
 		return PBPacker.message_to_string(data)
@@ -1028,6 +1046,87 @@ class PlayerChunkChange:
 			return PB_ERR.PARSE_INCOMPLETE
 		return result
 	
+class PlayerChunkChangeRsp:
+	func _init():
+		var service
+		
+		__uid = PBField.new("uid", PB_DATA_TYPE.UINT32, PB_RULE.OPTIONAL, 1, true, DEFAULT_VALUES_3[PB_DATA_TYPE.UINT32])
+		service = PBServiceField.new()
+		service.field = __uid
+		data[__uid.tag] = service
+		
+		__chunk_x = PBField.new("chunk_x", PB_DATA_TYPE.UINT32, PB_RULE.OPTIONAL, 2, true, DEFAULT_VALUES_3[PB_DATA_TYPE.UINT32])
+		service = PBServiceField.new()
+		service.field = __chunk_x
+		data[__chunk_x.tag] = service
+		
+		__chunk_y = PBField.new("chunk_y", PB_DATA_TYPE.UINT32, PB_RULE.OPTIONAL, 3, true, DEFAULT_VALUES_3[PB_DATA_TYPE.UINT32])
+		service = PBServiceField.new()
+		service.field = __chunk_y
+		data[__chunk_y.tag] = service
+		
+	var data = {}
+	
+	var __uid: PBField
+	func has_uid() -> bool:
+		if __uid.value != null:
+			return true
+		return false
+	func get_uid() -> int:
+		return __uid.value
+	func clear_uid() -> void:
+		data[1].state = PB_SERVICE_STATE.UNFILLED
+		__uid.value = DEFAULT_VALUES_3[PB_DATA_TYPE.UINT32]
+	func set_uid(value : int) -> void:
+		__uid.value = value
+	
+	var __chunk_x: PBField
+	func has_chunk_x() -> bool:
+		if __chunk_x.value != null:
+			return true
+		return false
+	func get_chunk_x() -> int:
+		return __chunk_x.value
+	func clear_chunk_x() -> void:
+		data[2].state = PB_SERVICE_STATE.UNFILLED
+		__chunk_x.value = DEFAULT_VALUES_3[PB_DATA_TYPE.UINT32]
+	func set_chunk_x(value : int) -> void:
+		__chunk_x.value = value
+	
+	var __chunk_y: PBField
+	func has_chunk_y() -> bool:
+		if __chunk_y.value != null:
+			return true
+		return false
+	func get_chunk_y() -> int:
+		return __chunk_y.value
+	func clear_chunk_y() -> void:
+		data[3].state = PB_SERVICE_STATE.UNFILLED
+		__chunk_y.value = DEFAULT_VALUES_3[PB_DATA_TYPE.UINT32]
+	func set_chunk_y(value : int) -> void:
+		__chunk_y.value = value
+	
+	func _to_string() -> String:
+		return PBPacker.message_to_string(data)
+		
+	func to_bytes() -> PackedByteArray:
+		return PBPacker.pack_message(data)
+		
+	func from_bytes(bytes : PackedByteArray, offset : int = 0, limit : int = -1) -> int:
+		var cur_limit = bytes.size()
+		if limit != -1:
+			cur_limit = limit
+		var result = PBPacker.unpack_message(data, bytes, offset, cur_limit)
+		if result == cur_limit:
+			if PBPacker.check_required(data):
+				if limit == -1:
+					return PB_ERR.NO_ERRORS
+			else:
+				return PB_ERR.REQUIRED_FIELDS
+		elif limit == -1 && result > 0:
+			return PB_ERR.PARSE_INCOMPLETE
+		return result
+	
 class TransmitPlayer:
 	func _init():
 		var service
@@ -1109,7 +1208,133 @@ class TransmitPlayer:
 			return PB_ERR.PARSE_INCOMPLETE
 		return result
 	
-class PlayerNameReq:
+class Speak:
+	func _init():
+		var service
+		
+		__user_name = PBField.new("user_name", PB_DATA_TYPE.STRING, PB_RULE.OPTIONAL, 1, true, DEFAULT_VALUES_3[PB_DATA_TYPE.STRING])
+		service = PBServiceField.new()
+		service.field = __user_name
+		data[__user_name.tag] = service
+		
+		__msg = PBField.new("msg", PB_DATA_TYPE.STRING, PB_RULE.OPTIONAL, 2, true, DEFAULT_VALUES_3[PB_DATA_TYPE.STRING])
+		service = PBServiceField.new()
+		service.field = __msg
+		data[__msg.tag] = service
+		
+	var data = {}
+	
+	var __user_name: PBField
+	func has_user_name() -> bool:
+		if __user_name.value != null:
+			return true
+		return false
+	func get_user_name() -> String:
+		return __user_name.value
+	func clear_user_name() -> void:
+		data[1].state = PB_SERVICE_STATE.UNFILLED
+		__user_name.value = DEFAULT_VALUES_3[PB_DATA_TYPE.STRING]
+	func set_user_name(value : String) -> void:
+		__user_name.value = value
+	
+	var __msg: PBField
+	func has_msg() -> bool:
+		if __msg.value != null:
+			return true
+		return false
+	func get_msg() -> String:
+		return __msg.value
+	func clear_msg() -> void:
+		data[2].state = PB_SERVICE_STATE.UNFILLED
+		__msg.value = DEFAULT_VALUES_3[PB_DATA_TYPE.STRING]
+	func set_msg(value : String) -> void:
+		__msg.value = value
+	
+	func _to_string() -> String:
+		return PBPacker.message_to_string(data)
+		
+	func to_bytes() -> PackedByteArray:
+		return PBPacker.pack_message(data)
+		
+	func from_bytes(bytes : PackedByteArray, offset : int = 0, limit : int = -1) -> int:
+		var cur_limit = bytes.size()
+		if limit != -1:
+			cur_limit = limit
+		var result = PBPacker.unpack_message(data, bytes, offset, cur_limit)
+		if result == cur_limit:
+			if PBPacker.check_required(data):
+				if limit == -1:
+					return PB_ERR.NO_ERRORS
+			else:
+				return PB_ERR.REQUIRED_FIELDS
+		elif limit == -1 && result > 0:
+			return PB_ERR.PARSE_INCOMPLETE
+		return result
+	
+class PlayerStateChange:
+	func _init():
+		var service
+		
+		__uid = PBField.new("uid", PB_DATA_TYPE.UINT32, PB_RULE.OPTIONAL, 1, true, DEFAULT_VALUES_3[PB_DATA_TYPE.UINT32])
+		service = PBServiceField.new()
+		service.field = __uid
+		data[__uid.tag] = service
+		
+		__action = PBField.new("action", PB_DATA_TYPE.UINT32, PB_RULE.OPTIONAL, 2, true, DEFAULT_VALUES_3[PB_DATA_TYPE.UINT32])
+		service = PBServiceField.new()
+		service.field = __action
+		data[__action.tag] = service
+		
+	var data = {}
+	
+	var __uid: PBField
+	func has_uid() -> bool:
+		if __uid.value != null:
+			return true
+		return false
+	func get_uid() -> int:
+		return __uid.value
+	func clear_uid() -> void:
+		data[1].state = PB_SERVICE_STATE.UNFILLED
+		__uid.value = DEFAULT_VALUES_3[PB_DATA_TYPE.UINT32]
+	func set_uid(value : int) -> void:
+		__uid.value = value
+	
+	var __action: PBField
+	func has_action() -> bool:
+		if __action.value != null:
+			return true
+		return false
+	func get_action() -> int:
+		return __action.value
+	func clear_action() -> void:
+		data[2].state = PB_SERVICE_STATE.UNFILLED
+		__action.value = DEFAULT_VALUES_3[PB_DATA_TYPE.UINT32]
+	func set_action(value : int) -> void:
+		__action.value = value
+	
+	func _to_string() -> String:
+		return PBPacker.message_to_string(data)
+		
+	func to_bytes() -> PackedByteArray:
+		return PBPacker.pack_message(data)
+		
+	func from_bytes(bytes : PackedByteArray, offset : int = 0, limit : int = -1) -> int:
+		var cur_limit = bytes.size()
+		if limit != -1:
+			cur_limit = limit
+		var result = PBPacker.unpack_message(data, bytes, offset, cur_limit)
+		if result == cur_limit:
+			if PBPacker.check_required(data):
+				if limit == -1:
+					return PB_ERR.NO_ERRORS
+			else:
+				return PB_ERR.REQUIRED_FIELDS
+		elif limit == -1 && result > 0:
+			return PB_ERR.PARSE_INCOMPLETE
+		return result
+	
+class PlayerInfoReq:
 	func _init():
 		var service
 		
@@ -1154,7 +1379,7 @@ class PlayerNameReq:
 			return PB_ERR.PARSE_INCOMPLETE
 		return result
 	
-class PlayerNameRsp:
+class PlayerInfoRsp:
 	func _init():
 		var service
 		
@@ -1163,10 +1388,20 @@ class PlayerNameRsp:
 		service.field = __uid
 		data[__uid.tag] = service
 		
-		__name = PBField.new("name", PB_DATA_TYPE.STRING, PB_RULE.OPTIONAL, 2, true, DEFAULT_VALUES_3[PB_DATA_TYPE.STRING])
+		__state = PBField.new("state", PB_DATA_TYPE.UINT32, PB_RULE.OPTIONAL, 2, true, DEFAULT_VALUES_3[PB_DATA_TYPE.UINT32])
+		service = PBServiceField.new()
+		service.field = __state
+		data[__state.tag] = service
+		
+		__name = PBField.new("name", PB_DATA_TYPE.STRING, PB_RULE.OPTIONAL, 3, true, DEFAULT_VALUES_3[PB_DATA_TYPE.STRING])
 		service = PBServiceField.new()
 		service.field = __name
 		data[__name.tag] = service
+		
+		__direction = PBField.new("direction", PB_DATA_TYPE.BOOL, PB_RULE.OPTIONAL, 4, true, DEFAULT_VALUES_3[PB_DATA_TYPE.BOOL])
+		service = PBServiceField.new()
+		service.field = __direction
+		data[__direction.tag] = service
 		
 	var data = {}
 	
@@ -1183,6 +1418,19 @@ class PlayerNameRsp:
 	func set_uid(value : int) -> void:
 		__uid.value = value
 	
+	var __state: PBField
+	func has_state() -> bool:
+		if __state.value != null:
+			return true
+		return false
+	func get_state() -> int:
+		return __state.value
+	func clear_state() -> void:
+		data[2].state = PB_SERVICE_STATE.UNFILLED
+		__state.value = DEFAULT_VALUES_3[PB_DATA_TYPE.UINT32]
+	func set_state(value : int) -> void:
+		__state.value = value
+	
 	var __name: PBField
 	func has_name() -> bool:
 		if __name.value != null:
@@ -1191,10 +1439,23 @@ class PlayerNameRsp:
 	func get_name() -> String:
 		return __name.value
 	func clear_name() -> void:
-		data[2].state = PB_SERVICE_STATE.UNFILLED
+		data[3].state = PB_SERVICE_STATE.UNFILLED
 		__name.value = DEFAULT_VALUES_3[PB_DATA_TYPE.STRING]
 	func set_name(value : String) -> void:
 		__name.value = value
+	
+	var __direction: PBField
+	func has_direction() -> bool:
+		if __direction.value != null:
+			return true
+		return false
+	func get_direction() -> bool:
+		return __direction.value
+	func clear_direction() -> void:
+		data[4].state = PB_SERVICE_STATE.UNFILLED
+		__direction.value = DEFAULT_VALUES_3[PB_DATA_TYPE.BOOL]
+	func set_direction(value : bool) -> void:
+		__direction.value = value
 	
 	func _to_string() -> String:
 		return PBPacker.message_to_string(data)

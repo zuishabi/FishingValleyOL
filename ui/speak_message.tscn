@@ -1,0 +1,25 @@
+[gd_scene load_steps=2 format=3 uid="uid://bh3wc5cjlpmsy"]
+
+[ext_resource type="Script" uid="uid://cocao2vdgc7cq" path="res://ui/speak_message.gd" id="1_eb27a"]
+
+[node name="SpeakMessage" type="PanelContainer"]
+offset_right = 245.0
+offset_bottom = 40.0
+script = ExtResource("1_eb27a")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="UserName" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+fit_content = true
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

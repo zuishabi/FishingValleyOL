@@ -25,7 +25,6 @@ func _ready():
 	put_processor = Thread.new()
 
 func connect_to_server(ip:String,port:int,key):
-	print(ip," ",port)
 	if tcp_conn.connect_to_host(ip,port) != OK:
 		confirm_login.emit(false,0,"连接服务器失败,1")
 		return
@@ -70,9 +69,9 @@ func _send_msg():
 func get_msg():
 	while 1:
 		if tcp_conn.get_status() != StreamPeerTCP.Status.STATUS_CONNECTED:
-			print("断开连接")
 			if login:
 				event_bus.show_error.emit.call_deferred("与服务器断开连接",1,back_to_login_menu)
+				login = false
 			return
 		var msg_len:int = tcp_conn.get_32()
 		var msg_id:int =  tcp_conn.get_32()
@@ -90,15 +89,17 @@ func parse_msg(msg_id:int,msg:PackedByteArray):
 	if msg_id == 1:
 		var rsp:Proto.protocol.ConfirmLoginResponse = Proto.protocol.ConfirmLoginResponse.new()
 		rsp.from_bytes(msg)
+		if rsp.get_success() == true:
+			login = true
 		confirm_login.emit.call_deferred(rsp.get_success(),rsp.get_id(),rsp.get_content())
 	elif msg_id == 3:
 		var move:Proto.protocol.Movement = Proto.protocol.Movement.new()
 		move.from_bytes(msg)
 		event_bus.plyer_move.emit.call_deferred(move)
 	elif msg_id == 10:
-		var rsp:Proto.protocol.PlayerNameRsp = Proto.protocol.PlayerNameRsp.new()
+		var rsp:Proto.protocol.PlayerInfoRsp = Proto.protocol.PlayerInfoRsp.new()
 		rsp.from_bytes(msg)
-		event_bus.get_player_name.emit.call_deferred(rsp)
+		event_bus.get_player_info.emit.call_deferred(rsp)
 	elif msg_id == 4:
 		# 用户离开游戏
 		var leave:Proto.protocol.PlayerLeave = Proto.protocol.PlayerLeave.new()
@@ -109,3 +110,11 @@ func parse_msg(msg_id:int,msg:PackedByteArray):
 		var transmit:Proto.protocol.TransmitPlayer = Proto.protocol.TransmitPlayer.new()
 		transmit.from_bytes(msg)
 		event_bus.transmit_player.emit.call_deferred(transmit)
+	elif msg_id == 7:
+		var speak:Proto.protocol.Speak = Proto.protocol.Speak.new()
+		speak.from_bytes(msg)
+		event_bus.get_speak.emit.call_deferred(speak)
+	elif msg_id == 8:
+		var action:Proto.protocol.PlayerStateChange = Proto.protocol.PlayerStateChange.new()
+		action.from_bytes(msg)
+		event_bus.update_player_action.emit.call_deferred(action)
